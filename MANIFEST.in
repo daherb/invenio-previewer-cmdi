@@ -1,0 +1,2 @@
+recursive-include invenio_previewer_cmdi *.xsl
+recursive-include tests *.py
