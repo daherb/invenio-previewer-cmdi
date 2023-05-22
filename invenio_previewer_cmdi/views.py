@@ -6,7 +6,7 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
-"""invenio module for IDS config."""
+"""invenio module for CMDI previewer."""
 
 from flask import Blueprint, render_template, current_app
 import logging
