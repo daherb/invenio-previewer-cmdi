@@ -5,7 +5,6 @@
 # invenio-previewer-cmdi is free software; you can redistribute it and/or
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
-# from flask import current_app
-# PREVIEWER_PREVIEWERS_ORDER=['invenio_previewer_cmdi']
-# current_app.config['PREVIEWER_PREFERENCE'].insert(0, 'invenio_previewer_cmdi')
-# PREVIEWER_PREFERENCE=['invenio_previewer_cmdi']
+
+# Name of the XSLT stylesheet placed in invenio_previewer_cmdi/static/xsl (or in static/xsl of any other package)
+CMDI_PREVIEWER_STYLESHEET="simple.xsl"
