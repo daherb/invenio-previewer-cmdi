@@ -8,6 +8,7 @@
 
 """CMDI previewer."""
 from flask import current_app, render_template, url_for
+# detect_encoding does not seem to be working here
 # from invenio_previewer.utils import detect_encoding
 from lxml import etree
 import requests
