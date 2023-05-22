@@ -10,7 +10,6 @@
 from flask import current_app, render_template, url_for
 # from invenio_previewer.utils import detect_encoding
 from lxml import etree
-from io import StringIO
 import requests
 
 # Part implementing previewer
