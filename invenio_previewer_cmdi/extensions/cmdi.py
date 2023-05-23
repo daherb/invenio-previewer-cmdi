@@ -18,12 +18,13 @@ previewable_extensions = ['cmdi']
 def can_preview(file):
     return file.filename.endswith('.cmdi')
 
-def render(file):
+def render(file, stylesheet):
     with file.open() as fp:
         encoding = "utf-8" # detect_encoding(fp, default="utf-8")
         content = fp.read().decode(encoding)
-        transform = etree.XSLT(etree.fromstring(bytes(requests.get(url_for('static', filename='xsl/'+ current_app.config['CMDI_PREVIEWER_STYLESHEET'],_external=True)).text, "utf-8")))
+        transform = etree.XSLT(etree.fromstring(bytes(stylesheet, "utf-8")))
         return str(transform(etree.fromstring(bytes(content, "utf-8"))))
     
 def preview(file):
-    return render(file)
+    stylesheet = requests.get(url_for('static', filename='xsl/'+ current_app.config['CMDI_PREVIEWER_STYLESHEET'],_external=True)).text
+    return render(file, stylesheet)
