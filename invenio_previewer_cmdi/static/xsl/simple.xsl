@@ -7,7 +7,8 @@
 	      doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" indent="yes" />
 
   <xsl:template match="/">
-    <html><h1><xsl:value-of select="//*[local-name()='ResourceTitle']" /></h1>
+    <html>
+      <h1><xsl:value-of select="//*[local-name()='ResourceTitle']" /></h1>
     <p>
       <xsl:value-of select="//*[local-name()='Organisation']/*[local-name()='name']" />
     </p>
