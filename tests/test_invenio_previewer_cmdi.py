@@ -15,7 +15,7 @@ from invenio_previewer_cmdi.views import blueprint
 from invenio_previewer_cmdi.extensions.cmdi import can_preview, render
 
 import pkg_resources
-import logging
+
 def test_version():
     """Test version import."""
     from invenio_previewer_cmdi import __version__
@@ -59,6 +59,5 @@ def test_extension(app):
     print()
     stylesheet = open(pkg_resources.resource_filename('invenio_previewer_cmdi','static/xsl/simple.xsl'), 'r').read()
     rendered = render(file, stylesheet)
-    logging.getLogger().warn(rendered)
     assert "<html" in rendered
     assert "<h1>Wikipedia.de 2013 Diskussionen</h1>" in rendered
