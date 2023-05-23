@@ -29,3 +29,8 @@ invenio_previewer_cmdi = "invenio_previewer_cmdi.views:blueprint"
 invenio_previewer_cmdi = "invenio_previewer_cmdi.config"
 [project.entry-points."invenio_previewer.previewers"]
 invenio_previewer_cmdi = "invenio_previewer_cmdi.extensions.cmdi"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
