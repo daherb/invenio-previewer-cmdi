@@ -28,7 +28,7 @@ class InvenioPreviewerCMDI(object):
         for k in dir(config):
             app.config.setdefault(k, getattr(config, k))
         # Add previewer in the end of the list
-        app.config['PREVIEWER_PREFERENCE'].append('invenio_previewer_cmdi')
+        app.config.setdefault('PREVIEWER_PREFERENCE',[]).append('invenio_previewer_cmdi')
         # alternatively in the beginning
         # .insert(0, 'invenio_previewer_cmdi')
                                    
