@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmd:CMD xmlns:cmd="http://www.clarin.eu/cmd/1"
+                    xmlns:cmdp="http://www.clarin.eu/cmd/1/profiles/clarin.eu:cr1:p_1559563375778"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CMDVersion="1.2"
+                    xsi:schemaLocation="http://www.clarin.eu/cmd/1 https://infra.clarin.eu/CMDI/1.x/xsd/cmd-envelop.xsd http://www.clarin.eu/cmd/1/profiles/clarin.eu:cr1:p_1559563375778 https://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/1.x/profiles/clarin.eu:cr1:p_1559563375778/xsd">
+                    <cmd:Header>
+                                        <cmd:MdCreator>I5 CMDI Generator</cmd:MdCreator>
+                                        <cmd:MdCreationDate>2022-11-18</cmd:MdCreationDate>
+                                        <cmd:MdSelfLink/>
+                                        <cmd:MdProfile>clarin.eu:cr1:p_1559563375778</cmd:MdProfile>
+                                        <cmd:MdCollectionDisplayName>Institut für Deutsche Sprache, CLARIN-D Zentrum, Mannheim</cmd:MdCollectionDisplayName>
+                    </cmd:Header>
+                    <cmd:Resources>
+                                        <cmd:ResourceProxyList>
+                                                  <cmd:ResourceProxy id="bla1">
+                                                  <cmd:ResourceType mimetype="text/html">LandingPage</cmd:ResourceType>
+                                                  <cmd:ResourceRef/>
+                                                  </cmd:ResourceProxy>
+                                                  <cmd:ResourceProxy id="bla2">
+                                                  <cmd:ResourceType mimetype="application/x-cmdi+xml">Metadata</cmd:ResourceType>
+                                                  <cmd:ResourceRef/>
+                                                  </cmd:ResourceProxy>
+                                                  <cmd:ResourceProxy id="bla3">
+                                                  <cmd:ResourceType mimetype="application/xml">Resource</cmd:ResourceType>
+                                                  <cmd:ResourceRef/>
+                                                  </cmd:ResourceProxy>
+                                        </cmd:ResourceProxyList>
+                                        <cmd:JournalFileProxyList>
+                                                  <cmd:JournalFileProxy>
+                                                  <cmd:JournalFileRef/>
+                                                  </cmd:JournalFileProxy>
+                                        </cmd:JournalFileProxyList>
+                                        <cmd:ResourceRelationList/>
+                    </cmd:Resources>
+                    <cmd:Components>
+                                        <cmdp:TextCorpusProfile>
+                                                  <cmdp:GeneralInfo>
+                                                  <cmdp:ResourceName>WDD13</cmdp:ResourceName>
+                                                  <cmdp:ResourceTitle xml:lang="de">Wikipedia.de 2013 Diskussionen</cmdp:ResourceTitle>
+                                                  <cmdp:ResourceClass>Corpus</cmdp:ResourceClass>
+                                                  <cmdp:Version>1.0</cmdp:Version>
+                                                  <cmdp:LifeCycleStatus>published</cmdp:LifeCycleStatus>
+                                                  <cmdp:PublicationDate>2014-09-05</cmdp:PublicationDate>
+                                                  <cmdp:LastUpdate>2014-08-22</cmdp:LastUpdate>
+                                                  <cmdp:LegalOwner xml:lang="de">Institut für Deutsche Sprache</cmdp:LegalOwner>
+                                                  <cmdp:Genre xml:lang="de">Diskussionen zu Enzyklopädie-Artikeln</cmdp:Genre>
+                                                  <cmdp:FieldOfResearch/>
+                                                  <cmdp:Location>
+                                                  <cmdp:Address>Postfach 10 16 21, D-68016 Mannheim</cmdp:Address>
+                                                  <cmdp:Telephone>+49 (0)621 1581 0</cmdp:Telephone>
+                                                  <cmdp:Email>dereko@ids-mannheim.de</cmdp:Email>
+                                                  <cmdp:WebReference>
+                                                  <cmdp:Website>http://www.ids-mannheim.de</cmdp:Website>
+                                                  <cmdp:Description/>
+                                                  </cmdp:WebReference>
+                                                  <cmdp:WebReference>
+                                                  <cmdp:Website>http://www.ids-mannheim.de/kl/projekte/korpora/</cmdp:Website>
+                                                  <cmdp:Description/>
+                                                  </cmdp:WebReference>
+                                                  <cmdp:Country>
+                                                  <cmdp:CountryName xml:lang="de">Deutschland</cmdp:CountryName>
+                                                  <cmdp:CountryCoding>DE</cmdp:CountryCoding>
+                                                  </cmdp:Country>
+                                                  </cmdp:Location>
+                                                  <cmdp:ModalityInfo>
+                                                  <cmdp:Modalities>written</cmdp:Modalities>
+                                                  </cmdp:ModalityInfo>
+                                                  </cmdp:GeneralInfo>
+                                                  <cmdp:Creation>
+                                                  <cmdp:Creators>
+                                                  <cmdp:Descriptions>
+                                                  <cmdp:Description/>
+                                                  </cmdp:Descriptions>
+                                                  </cmdp:Creators>
+                                                  <cmdp:Source>
+                                                  <cmdp:OriginalSource>Dump file &amp;#34;dewiki-20130728-pages-meta-current.xml&amp;#34; retrieved from http://dumps.wikimedia.org</cmdp:OriginalSource>
+                                                  <cmdp:Descriptions>
+                                                  <cmdp:Description>Wikipedia wikipedia.org Wikipedia  </cmdp:Description>
+                                                  <cmdp:Description/>
+                                                  </cmdp:Descriptions>
+                                                  </cmdp:Source>
+                                                  </cmdp:Creation>
+                                                  <cmdp:TextCorpusContext>
+                                                  <cmdp:CorpusType>reference corpus</cmdp:CorpusType>
+                                                  <cmdp:ValidationGrp>
+                                                  <cmdp:Validation>false</cmdp:Validation>
+                                                  </cmdp:ValidationGrp>
+                                                  <cmdp:SubjectLanguages>
+                                                  <cmdp:NumberOfLanguages>1</cmdp:NumberOfLanguages>
+                                                  <cmdp:SubjectLanguage>
+                                                  <cmdp:Language>
+                                                  <cmdp:LanguageName/>
+                                                  <cmdp:ISO639>
+                                                  <cmdp:iso-639-3-code>deu</cmdp:iso-639-3-code>
+                                                  </cmdp:ISO639>
+                                                  </cmdp:Language>
+                                                  </cmdp:SubjectLanguage>
+                                                  </cmdp:SubjectLanguages>
+                                                  </cmdp:TextCorpusContext>
+                                                  <cmdp:Access>
+                                                  <cmdp:Availability xml:lang="en">restricted</cmdp:Availability>
+                                                  <cmdp:Licence>This document, the
+                                                  IDS-Wikipedia.de-Corpus, is part of the Archive of
+                                                  General Reference Corpora at the IDS. It is
+                                                  published under the Creative Commons
+                                                  Attribution-ShareAlike License. See
+                                                  http://creativecommons.org/licenses/by-sa/3.0/legalcode
+                                                  for details. See
+                                                  http://www.ids-mannheim.de/kl/projekte/korpora/releases.html
+                                                  on how to refer to this document.</cmdp:Licence>
+                                                  <cmdp:Contact>
+                                                  <cmdp:firstname/>
+                                                  <cmdp:lastname/>
+                                                  <cmdp:email/>
+                                                  <cmdp:telephoneNumber/>
+                                                  <cmdp:role/>
+                                                  <cmdp:Address>
+                                                  <cmdp:street/>
+                                                  <cmdp:ZIPCode/>
+                                                  <cmdp:city/>
+                                                  </cmdp:Address>
+                                                  </cmdp:Contact>
+                                                  <cmdp:DeploymentToolInfo>
+                                                  <cmdp:DeploymentTool/>
+                                                  <cmdp:ToolType/>
+                                                  <cmdp:Url/>
+                                                  <cmdp:Descriptions>
+                                                  <cmdp:Description xml:lang="en"/>
+                                                  </cmdp:Descriptions>
+                                                  </cmdp:DeploymentToolInfo>
+                                                  </cmdp:Access>
+                                                  <cmdp:ResourceProxyListInfo/>
+                                        </cmdp:TextCorpusProfile>
+                    </cmd:Components>
+</cmd:CMD>
