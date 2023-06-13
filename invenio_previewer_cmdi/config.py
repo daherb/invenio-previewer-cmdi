@@ -7,4 +7,4 @@
 # details.
 
 # Name of the XSLT stylesheet placed in invenio_previewer_cmdi/static/xsl (or in static/xsl of any other package)
-CMDI_PREVIEWER_STYLESHEET="simple.xsl"
+CMDI_PREVIEWER_STYLESHEET="CMDI2HTML-merged.xsl"
