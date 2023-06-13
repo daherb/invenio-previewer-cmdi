@@ -26,5 +26,7 @@ def render(file, stylesheet):
         return str(transform(etree.fromstring(bytes(content, "utf-8"))))
     
 def preview(file):
+    current_app.logger.info('Rendering %s using stylesheet %s', file.filename, current_app.config['CMDI_PREVIEWER_STYLESHEET'])
     stylesheet = requests.get(url_for('static', filename='xsl/'+ current_app.config['CMDI_PREVIEWER_STYLESHEET'],_external=True)).text
+    
     return render(file, stylesheet)
