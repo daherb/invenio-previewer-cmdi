@@ -1763,389 +1763,7 @@
       <xsl:value-of select="."/>
     </li>
   </xsl:template>
-  <xsl:output method="html" indent="yes"/><xsl:template name="JSONLD">
-		<xsl:element name="script">
-			<xsl:attribute name="type">application/ld+json</xsl:attribute>
-
-			<!-- Only generate JSON-LD if name exists -->
-			<xsl:if test="//*[(local-name() = 'ResourceName' or local-name() = 'ResourceTitle') and text() != '']">
-					<xsl:text>/*&lt;![CDATA[*/</xsl:text>
-					<xsl:text>{
-</xsl:text>
-					<xsl:text>    "@context": "https://schema.org/",
-</xsl:text>
-					<xsl:text>    "@type": "DataSet",
-</xsl:text>
-					<xsl:text>    "name": "</xsl:text>
-
-					<xsl:choose>
-						<xsl:when test="//*[local-name() = 'ResourceName'] != ''">
-							<xsl:value-of select="//*[local-name() = 'ResourceName']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="//*[local-name() = 'ResourceTitle']"/>
-						</xsl:otherwise>
-					</xsl:choose>
-
-					<xsl:text>",
-</xsl:text>
-
-					<!-- Add Description -->
-					<!-- Escape quotation marks and remove linebreaks, since multi-line strings are not allowed in JSON -->
-					<xsl:variable name="description_in_cmdi">
-						<xsl:for-each select="//*[local-name() = 'GeneralInfo']/*[local-name() = 'Descriptions']/*[local-name() = 'Description']">
-							<xsl:if test="@xml:lang = &quot;en&quot;">
-								<xsl:value-of select="."/>
-							</xsl:if>
-							<xsl:if test="@xml:lang = &quot;de&quot; and not(../*[local-name() = &quot;Description&quot;][@xml:lang = &quot;en&quot;])">
-								<xsl:value-of select="."/>
-							</xsl:if>
-							<!-- <xsl:value-of select="."/>-->
-							<xsl:if test="not(@xml:lang = &quot;de&quot;) and not(../*[local-name() = &quot;Description&quot;][@xml:lang = &quot;en&quot;])">
-								<xml:text>No English or German description available.</xml:text>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:variable>
-					<xsl:variable name="description_in_cmdi2">
-						<!-- <xsl:value-of select="replace($description_in_cmdi[1], '&quot;', '\\&quot;')"/> -->
-						<xsl:call-template name="replace-string">
-							<xsl:with-param name="text" select="$description_in_cmdi"/>
-							<xsl:with-param name="replace" select="'&quot;'"/>
-							<xsl:with-param name="with" select="'\&quot;'"/>
-						</xsl:call-template>
-					</xsl:variable>
-					<xsl:variable name="description_in_cmdi3">
-						<xsl:call-template name="replace-string">
-							<xsl:with-param name="text" select="$description_in_cmdi2"/>
-							<xsl:with-param name="replace" select="'&#10;'"/>
-							<xsl:with-param name="with" select="' '"/>
-						</xsl:call-template>
-					</xsl:variable>
-
-					<xsl:text>    "description": "</xsl:text>
-					<xsl:value-of select="normalize-space($description_in_cmdi3)"/>
-					<xsl:text>",
-</xsl:text>
-					<xsl:text>    "url": "</xsl:text>
-					<xsl:value-of select="//*[local-name() = 'MdSelfLink']"/>
-					<xsl:text>",
-</xsl:text>
-					<xsl:text>    "identifier": "</xsl:text>
-					<xsl:value-of select="//*[local-name() = 'MdSelfLink']"/>
-					<xsl:text>",
-</xsl:text>
-					<xsl:text>    "dateModified": "</xsl:text>
-					<xsl:value-of select="//*[local-name() = 'LastUpdate']"/>
-					<xsl:text>",
-</xsl:text>
-
-					<!-- Check for LegalOwner nodes -->
-					<xsl:if test="//*[local-name() = 'LegalOwner'] != ''">
-						<xsl:text>    "copyrightHolder": [
-</xsl:text>
-						<xsl:for-each select="//*[local-name() = 'LegalOwner']">
-							<xsl:text>        {
-</xsl:text>
-							<xsl:text>            "@language": "</xsl:text>
-							<xsl:value-of select="./@*[local-name() = 'lang']"/>
-							<xsl:text>",
-</xsl:text>
-							<xsl:text>            "@value": "</xsl:text>
-							<xsl:value-of select="."/>
-							<xsl:text>"
-</xsl:text>
-							<xsl:text>        }</xsl:text>
-
-							<!-- Check if comma is needed -->
-							<xsl:if test="position() != last()">
-								<xsl:text>,
-</xsl:text>
-							</xsl:if>
-
-						</xsl:for-each>
-						<xsl:text>
-    ],
-</xsl:text>
-					</xsl:if>
-
-					<!-- Check for Genre -->
-					<xsl:if test="//*[local-name() = 'Genre'] != ''">
-						<xsl:text>    "genre": "</xsl:text>
-						<xsl:value-of select="//*[local-name() = 'Genre']"/>
-						<xsl:text>",
-</xsl:text>
-					</xsl:if>
-
-					<!-- Check for fundingAgency -->
-					<xsl:if test="//*[local-name() = 'fundingAgency'] != ''">
-						<xsl:text>    "funder": "</xsl:text>
-						<xsl:value-of select="//*[local-name() = 'fundingAgency']"/>
-						<xsl:text>",
-</xsl:text>
-					</xsl:if>
-
-					<!-- Check for Accessibility -->
-					<xsl:if test="//*[local-name() = 'Availability'] != ''">
-						<xsl:text>    "conditionsOfAccess": "</xsl:text>
-						<xsl:value-of select="//*[local-name() = 'Availability']"/>
-						<xsl:text>",
-</xsl:text>
-					</xsl:if>
-
-					<!-- Check for Licence -->
-					<xsl:if test="//*[local-name() = 'Licence'] != ''">
-						<xsl:text>    "license": "</xsl:text>
-						<xsl:value-of select="//*[local-name() = 'Licence']"/>
-						<xsl:text>",
-</xsl:text>
-					</xsl:if>
-
-					<xsl:text>
-</xsl:text>
-
-					<!-- DataCatalog -->
-					<xsl:text>    "includedInDataCatalog": {
-</xsl:text>
-					<xsl:text>        "@type": "DataCatalog",
-</xsl:text>
-					<xsl:text>        "url": "https://vlo.clarin.eu"
-</xsl:text>
-					<xsl:text>    },
-</xsl:text>
-
-					<!-- Location Created -->
-					<xsl:variable name="CreatLoc" select="//*[local-name() = 'GeneralInfo']/*[local-name() = 'Location']"/>
-					<xsl:if test="$CreatLoc/*[local-name() = 'Address'] != ''">
-						<xsl:text>    "locationCreated": {
-</xsl:text>
-						<xsl:text>        "@type": "Place",
-</xsl:text>
-						<xsl:text>        "address": {
-</xsl:text>
-
-						<xsl:text>            "@type": "PostalAddress",
-</xsl:text>
-						<xsl:text>            "name": "</xsl:text>
-						<xsl:value-of select="normalize-space($CreatLoc/*[local-name() = 'Address'])"/>
-						<xsl:text>"</xsl:text>
-
-						<!-- Check if CountryCoding exists -->
-						<xsl:if test="$CreatLoc/*[local-name() = 'Country']/*[local-name() = 'CountryCoding'] != ''">
-							<xsl:text>,
-</xsl:text>
-							<xsl:text>            "addressCountry": "</xsl:text>
-							<xsl:value-of select="normalize-space($CreatLoc/*[local-name() = 'Country']/*[local-name() = 'CountryCoding'])"/>
-							<xsl:text>"
-</xsl:text>
-						</xsl:if>
-						<!-- If CountryCoding empty/null add whitespace for correct indent -->
-						<xsl:if test="$CreatLoc/*[local-name() = 'Country']/*[local-name() = 'CountryCoding'] = '' or not($CreatLoc/*[local-name() = 'Country']/*[local-name() = 'CountryCoding'])">
-							<xsl:text>
-</xsl:text>
-						</xsl:if>
-						<xsl:text>        }
-</xsl:text>
-						<xsl:text>    },
-</xsl:text>
-					</xsl:if>
-
-					<!-- Creator -->
-					<!-- Check if at least one Creator Person or an Organization exists -->
-					<xsl:variable name="CreatorOrg" select="//*[local-name() = 'Project']/*[local-name() = 'Institution']/*[local-name() = 'Organisation']"/>
-					<xsl:variable name="CreatorPers" select="//*[local-name() = 'Creators']"/>
-
-					<xsl:if test="$CreatorOrg/*[local-name() = 'name'] != '' or $CreatorPers/*[local-name() = 'Person']/*[local-name() = 'lastName'] != ''">
-
-						<xsl:text>    "creator": [
-</xsl:text>
-						<!-- Organization info -->
-						<xsl:if test="$CreatorOrg/*[local-name() = 'name'] != ''">
-							<xsl:text>        {
-</xsl:text>
-							<xsl:text>            "@type": "Organization",
-</xsl:text>
-							<xsl:text>            "name": "</xsl:text>
-							<xsl:value-of select="$CreatorOrg/*[local-name() = 'name']"/>
-							<xsl:text>"</xsl:text>
-
-							<!-- Check if Organization Authoritative IDs exist -->
-							<xsl:if test="$CreatorOrg/*[local-name() = 'AuthoritativeIDs']/*[local-name() = 'AuthoritativeID']/*[local-name() = 'id'] != ''">
-								<xsl:text>,
-</xsl:text>
-								<xsl:text>            "sameAs": [
-</xsl:text>
-								<!-- Loop through IDs -->
-								<xsl:for-each select="$CreatorOrg/*[local-name() = 'AuthoritativeIDs']/*[local-name() = 'AuthoritativeID']">
-									<xsl:text>                "</xsl:text>
-									<xsl:value-of select="./*[local-name() = 'id']"/>
-									<xsl:text>"</xsl:text>
-
-									<!-- Check for last comma -->
-									<xsl:if test="position() != last()">
-										<xsl:text>,</xsl:text>
-									</xsl:if>
-									<xsl:text>
-</xsl:text>
-								</xsl:for-each>
-								<xsl:text>            ]
-</xsl:text>
-							</xsl:if>
-							<xsl:text>        }</xsl:text>
-						</xsl:if>
-
-						<!-- Check for Person Creator -->
-						<xsl:if test="$CreatorPers/*[local-name() = 'Person']/*[local-name() = 'lastName'] != ''">
-							<xsl:for-each select="$CreatorPers/*[local-name() = 'Person']">
-								<xsl:if test="position() = 1 and $CreatorOrg/*[local-name() = 'name'] != '' or position() != 1">
-									<xsl:text>,
-</xsl:text>
-								</xsl:if>
-								<xsl:text>        {
-</xsl:text>
-								<xsl:text>            "@type": "Person",
-</xsl:text>
-								<xsl:text>            "givenName": "</xsl:text>
-								<xsl:value-of select="./*[local-name() = 'firstName']"/>
-								<xsl:text>",
-</xsl:text>
-								<xsl:text>            "familyName": "</xsl:text>
-								<xsl:value-of select="./*[local-name() = 'lastName']"/>
-								<xsl:text>",
-</xsl:text>
-								<xsl:text>            "name": "</xsl:text>
-								<xsl:value-of select="concat(./*[local-name() = 'firstName'], ' ', ./*[local-name() = 'lastName'])"/>
-								<xsl:text>"
-</xsl:text>
-								<xsl:text>        }</xsl:text>
-							</xsl:for-each>
-						</xsl:if>
-						<xsl:text>
-    ],
-</xsl:text>
-					</xsl:if>
-
-					<!-- Check for isBasedOn (Source) -->
-					<xsl:if test="//*[local-name() = 'OriginalSource'] != ''">
-						<xsl:text>    "isBasedOnUrl": {
-</xsl:text>
-						<xsl:text>        "@type": "CreativeWork",
-</xsl:text>
-						<xsl:text>        "name": "</xsl:text>
-						<xsl:value-of select="//*[local-name() = 'OriginalSource']"/>
-						<xsl:text>"
-</xsl:text>
-						<xsl:text>    },
-</xsl:text>
-					</xsl:if>
-
-					<!-- Distribution (ResoureProxy Informations) -->
-
-					<xsl:text>    "distribution": [
-</xsl:text>
-					<xsl:for-each select="//*[local-name() = 'ResourceProxy']">
-						<xsl:variable name="ResName" select="./*[local-name() = 'ResourceRef']"/>
-						<xsl:variable name="id" select="./*[local-name() = 'ResourceType']/../@id"/>
-						<xsl:variable name="ResProxListInfo" select="//*[local-name() = 'ResourceProxyInfo'][@*[local-name() = 'ref' and . = $id]]"/>
-						<xsl:variable name="ResFileName" select="$ResProxListInfo/*[local-name() = 'ResProxFileName']/text()"/>
-
-						<xsl:text>        {
-</xsl:text>
-						<xsl:text>           "@type": "DataDownload",
-</xsl:text>
-						<xsl:text>           "contentURL": "</xsl:text>
-						<xsl:value-of select="$ResName"/>
-						<xsl:text>",
-</xsl:text>
-						<xsl:text>           "encodingFormat": "</xsl:text>
-						<xsl:value-of select="./*[local-name() = 'ResourceType']/@mimetype"/>
-						<xsl:text>"
-</xsl:text>
-
-						<xsl:if test="$ResProxListInfo//*[local-name() = 'Size'] != ''">
-							<xsl:text>,
-</xsl:text>
-							<xsl:text>           "contentSize": "</xsl:text>
-							<xsl:value-of select="$ResProxListInfo//*[local-name() = 'Size']"/>
-							<xsl:text>",
-</xsl:text>
-
-							<!-- Checksums -->
-							<!-- MD5 -->
-							<xsl:text>           "identifier": [
-</xsl:text>
-							<xsl:text>               {
-</xsl:text>
-							<xsl:text>                  "@type": "PropertyValue",
-</xsl:text>
-							<xsl:text>                  "propertyID": "MD5",
-</xsl:text>
-							<xsl:text>                   "identifier": "md5:</xsl:text>
-							<xsl:value-of select="$ResProxListInfo//*[local-name() = 'md5']"/>
-							<xsl:text>",
-</xsl:text>
-							<xsl:text>                   "value": "</xsl:text>
-							<xsl:value-of select="$ResProxListInfo//*[local-name() = 'md5']"/>
-							<xsl:text>"
-</xsl:text>
-							<xsl:text>               },
-</xsl:text>
-
-							<!-- SHA1 -->
-							<xsl:text>               {
-</xsl:text>
-							<xsl:text>                   "@type": "PropertyValue",
-</xsl:text>
-							<xsl:text>                   "propertyID": "SHA1",
-</xsl:text>
-							<xsl:text>                   "identifier": "sha1:</xsl:text>
-							<xsl:value-of select="$ResProxListInfo//*[local-name() = 'sha1']"/>
-							<xsl:text>",
-</xsl:text>
-							<xsl:text>                   "value": "</xsl:text>
-							<xsl:value-of select="$ResProxListInfo//*[local-name() = 'sha1']"/>
-							<xsl:text>"
-</xsl:text>
-							<xsl:text>               },
-</xsl:text>
-
-							<!-- SHA256 -->
-							<xsl:text>               {
-</xsl:text>
-							<xsl:text>                  "@type": "PropertyValue",
-</xsl:text>
-							<xsl:text>                  "propertyID": "SHA256",
-</xsl:text>
-							<xsl:text>                  "identifier": "sha1:</xsl:text>
-							<xsl:value-of select="$ResProxListInfo//*[local-name() = 'sha256']"/>
-							<xsl:text>",
-</xsl:text>
-							<xsl:text>                  "value": "</xsl:text>
-							<xsl:value-of select="$ResProxListInfo//*[local-name() = 'sha256']"/>
-							<xsl:text>"
-</xsl:text>
-							<xsl:text>               }
-</xsl:text>
-
-							<xsl:text>            ]
-</xsl:text>
-						</xsl:if>
-						<xsl:text>        }</xsl:text>
-
-						<!-- Check for last comma -->
-						<xsl:if test="position() != last()">
-							<xsl:text>,</xsl:text>
-						</xsl:if>
-						<xsl:text>
-</xsl:text>
-
-					</xsl:for-each>
-					<xsl:text>    ]</xsl:text>
-					<xsl:text>
-}</xsl:text>
-					<xsl:text>]</xsl:text>
-			</xsl:if>
-		</xsl:element>
-	</xsl:template>
+  <!-- <xsl:include href="xsl/JSONLD.xsl"/> -->
 
   <xsl:output method="html" indent="yes"/>
 
@@ -2169,81 +1787,49 @@ new SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
 
   <!-- This need to be OR'ed for all valid NaLiDa-based profiles -->
   <xsl:template match="/cmd:CMD">
-    <!-- <xsl:choose> -->
-    <!--   <xsl:when -->
-    <!--     test=" -->
-    <!--       contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1447674760338') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1442920133046') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1445542587893') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1485173990943') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1447674760337') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1505397653792') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1288172614026') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1288172614023') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1302702320451') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1290431694579') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1290431694580') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1320657629644') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1320657629649') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309872') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309874') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309875') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309876') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309877') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309878') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176122') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176123') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176124') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176125') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176126') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176127') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176128') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1548239945774') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1559563375778') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1659015263839') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176128') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1562754657343')"> -->
-    <!--     <!-\- CMDI 1.1 -\-> -->
+    <xsl:choose>
+      <xsl:when test="           contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1447674760338')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1442920133046')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1445542587893')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1485173990943')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1447674760337')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1505397653792')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1288172614026')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1288172614023')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1302702320451')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1290431694579')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1290431694580')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1320657629644')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1320657629649')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309872')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309874')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309875')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309876')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309877')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1524652309878')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176122')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176123')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176124')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176125')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176126')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176127')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176128')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1548239945774')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1559563375778')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1659015263839')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176128')           or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1562754657343')">
+        <!-- CMDI 1.1 -->
         <xsl:call-template name="mainProcessing"/>
-    <!--   </xsl:when> -->
-    <!--   <xsl:otherwise> -->
-    <!--     <error> -->
-    <!--       <xsl:text> -->
-    <!-- 		  Please use a valid CMDI schema v1.1 from the NaLiDa project. -->
-    <!-- 		  Currently the following profiles are being supported: -->
+      </xsl:when>
+      <xsl:otherwise>
+        <error>
+          <xsl:text>
+		  Please use a valid CMDI schema v1.1 from the NaLiDa project.
+		  Currently the following profiles are being supported:
 		
-    <!-- 		  - ToolProfile (clarin.eu:cr1:p_1447674760338), -->
-    <!-- 		  - TextCorpusProfile ('clarin.eu:cr1:p_1442920133046), -->
-    <!-- 		  - LexicalResourceProfile (clarin.eu:cr1:p_1445542587893), -->
-    <!-- 		  - SpeechCorpusProfile (clarin.eu:cr1:p_1485173990943), and -->
-    <!-- 		  - ExperimentProfile (clarin.eu:cr1:p_1447674760337) -->
-    <!-- 		  - CourseProfile (clarin.eu:cr1:p_1505397653792). -->
+		  - ToolProfile (clarin.eu:cr1:p_1447674760338),
+		  - TextCorpusProfile ('clarin.eu:cr1:p_1442920133046),
+		  - LexicalResourceProfile (clarin.eu:cr1:p_1445542587893),
+		  - SpeechCorpusProfile (clarin.eu:cr1:p_1485173990943), and
+		  - ExperimentProfile (clarin.eu:cr1:p_1447674760337)
+		  - CourseProfile (clarin.eu:cr1:p_1505397653792).
 		  
-    <!-- 		  Additional we suppor the following profiles, which are utilized by the CLARIN-D-Centre in Tübingen -->
-    <!-- 		  - OLAC-DcmiTerms: clarin.eu:cr1:p_1288172614026 -->
-    <!-- 		  - DcmiTerms: clarin.eu:cr1:p_1288172614023 -->
+		  Additional we suppor the following profiles, which are utilized by the CLARIN-D-Centre in Tübingen
+		  - OLAC-DcmiTerms: clarin.eu:cr1:p_1288172614026
+		  - DcmiTerms: clarin.eu:cr1:p_1288172614023
 		  
-    <!-- 		  Older version of the profiles are partly supported, currently only if used  in CMDI 1.2 files: -->
-    <!-- 		  - ExperimentProfile: clarin.eu:cr1:p_1302702320451 -->
-    <!-- 		  - LexicalResourceProfile: clarin.eu:cr1:p_1290431694579 -->
-    <!-- 		  - TextCorpusProfile: clarin.eu:cr1:p_1290431694580 -->
-    <!-- 		  - ToolProfile: clarin.eu:cr1:p_1290431694581 -->
-    <!-- 		  - WebLichtWebService: clarin.eu:cr1:p_1320657629644 -->
-    <!-- 		  - Resource Bundle: clarin.eu:cr1:p_1320657629649 -->
+		  Older version of the profiles are partly supported, currently only if used  in CMDI 1.2 files:
+		  - ExperimentProfile: clarin.eu:cr1:p_1302702320451
+		  - LexicalResourceProfile: clarin.eu:cr1:p_1290431694579
+		  - TextCorpusProfile: clarin.eu:cr1:p_1290431694580
+		  - ToolProfile: clarin.eu:cr1:p_1290431694581
+		  - WebLichtWebService: clarin.eu:cr1:p_1320657629644
+		  - Resource Bundle: clarin.eu:cr1:p_1320657629649
 		  
-    <!-- 		  Newer version of the profiles are partly, currently only if used  in CMDI 1.2 files: -->
-    <!-- 		  - ExperimentProfile: clarin.eu:cr1:p_1524652309872 -->
-    <!-- 		  - TextCorpusProfile: clarin.eu:cr1:p_1524652309874 -->
-    <!-- 		  - ToolProfile: clarin.eu:cr1:p_1524652309875 -->
-    <!-- 		  - LexicalResourceProfile: clarin.eu:cr1:p_1524652309876 -->
-    <!-- 		  - CourseProfile: clarin.eu:cr1:p_1524652309877 -->
-    <!-- 		  - SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878 -->
+		  Newer version of the profiles are partly, currently only if used  in CMDI 1.2 files:
+		  - ExperimentProfile: clarin.eu:cr1:p_1524652309872
+		  - TextCorpusProfile: clarin.eu:cr1:p_1524652309874
+		  - ToolProfile: clarin.eu:cr1:p_1524652309875
+		  - LexicalResourceProfile: clarin.eu:cr1:p_1524652309876
+		  - CourseProfile: clarin.eu:cr1:p_1524652309877
+		  - SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
 		  
 	  
-    <!-- 		</xsl:text> -->
-    <!--     </error> -->
-    <!--   </xsl:otherwise> -->
-    <!-- </xsl:choose> -->
+		</xsl:text>
+        </error>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="/cmde:CMD/cmde:Header">
@@ -2282,9 +1868,9 @@ new SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
     <!--       or contains(/cmde:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176128') -->
     <!--       or contains(/cmde:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1548239945774') -->
     <!--       or contains(/cmde:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1562754657343') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1559563375778') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1659015263839') -->
-    <!--       or contains(/cmd:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176128') -->
+    <!--       or contains(/cmde:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1559563375778') -->
+    <!--       or contains(/cmde:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1659015263839') -->
+    <!--       or contains(/cmde:CMD/@xsi:schemaLocation, 'clarin.eu:cr1:p_1527668176128') -->
     <!--       "> -->
     <!--     <!-\- CMDI 1.2 -\-> -->
         <xsl:call-template name="mainProcessing"/>
@@ -2297,17 +1883,17 @@ new SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
 		
     <!-- 		- ToolProfile (clarin.eu:cr1:p_1447674760338), -->
     <!-- 		- TextCorpusProfile ('clarin.eu:cr1:p_1442920133046) -->
-    <!-- 		- LexicalResourceProfile (clarin.eu:cr1:p_1445542587893)  -->
-    <!-- 		- SpeechCorpusProfile (clarin.eu:cr1:p_1485173990943)		 -->
+    <!-- 		- LexicalResourceProfile (clarin.eu:cr1:p_1445542587893) -->
+    <!-- 		- SpeechCorpusProfile (clarin.eu:cr1:p_1485173990943) -->
     <!-- 		- ExperimentProfile (clarin.eu:cr1:p_1447674760337) -->
     <!-- 		- CourseProfile (clarin.eu:cr1:p_1505397653792) -->
 
-    <!-- 		  - ExperimentProfile: clarin.eu:cr1:p_1524652309872  -->
+    <!-- 		  - ExperimentProfile: clarin.eu:cr1:p_1524652309872 -->
     <!-- 		  - TextCorpusProfile: clarin.eu:cr1:p_1524652309874 -->
     <!-- 		  - ToolProfile: clarin.eu:cr1:p_1524652309875 -->
     <!-- 		  - LexicalResourceProfile: clarin.eu:cr1:p_1524652309876 -->
     <!-- 		  - CourseProfile: clarin.eu:cr1:p_1524652309877 -->
-    <!-- 		  - SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878  -->
+    <!-- 		  - SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878 -->
 		  
     <!-- 		    - TextCorpusProfile: clarin.eu:cr1:p_1527668176122 -->
     <!-- 		    - LexicalResourceProfile: clarin.eu:cr1:p_1527668176123 -->
@@ -2321,7 +1907,7 @@ new SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
     <!-- 		  - OLAC-DcmiTerms: clarin.eu:cr1:p_1288172614026 -->
     <!-- 		  - DcmiTerms: clarin.eu:cr1:p_1288172614023 -->
 		  
-    <!-- 		  Older versions of the profiles are partly supported, currently only if used in CMDI 1.2 files:  -->
+    <!-- 		  Older versions of the profiles are partly supported, currently only if used in CMDI 1.2 files: -->
     <!-- 		  - ExperimentProfile: clarin.eu:cr1:p_1302702320451 -->
     <!-- 		  - LexicalResourceProfile: clarin.eu:cr1:p_1290431694579 -->
     <!-- 		  - TextCorpusProfile: clarin.eu:cr1:p_1290431694580 -->
@@ -2347,8 +1933,8 @@ new SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
         <link rel="stylesheet" type="text/css" href="https://talar.sfb833.uni-tuebingen.de/assets/main.css"/>
 
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <xsl:call-template name="meta-description"/>
-        <xsl:call-template name="JSONLD"/>
+        <!-- <xsl:call-template name="meta-description" /> -->
+        <!-- <xsl:call-template name="JSONLD"/> -->
 
         <style>
 /* TODO: migrate these definitions into the main.css file once completed */
@@ -2577,7 +2163,7 @@ footer {
               <a class="u-email" href="mailto:clarin-repository@sfs.uni-tuebingen.de">clarin-repository@sfs.uni-tuebingen.de</a>
             </p>
           </address>
-          <xsl:call-template name="social-media-links"/> 
+          <!-- <xsl:call-template name="social-media-links"/>  -->
         </footer>
       </body>
     </html>
@@ -2691,42 +2277,51 @@ footer {
     </section>
   </xsl:template>
 
-  <xsl:template name="meta-description">
-    <xsl:element name="meta">
-      <xsl:attribute name="name">description</xsl:attribute>
-      <xsl:attribute name="content">
-        <!-- TODO! This can be important for SEO. Resource class?
-             Genre? profile type? Descriptions? -->
-      </xsl:attribute>
-    </xsl:element>
-  </xsl:template>
+  <!-- <xsl:template name="meta-description"> -->
+  <!--   <xsl:element name="meta"> -->
+  <!--     <xsl:attribute name="name">description</xsl:attribute> -->
+  <!--     <xsl:attribute name="content"> -->
+  <!--       <!-\- TODO! This can be important for SEO. Resource class? -->
+  <!--            Genre? profile type? Descriptions? -\-> -->
+  <!--     </xsl:attribute> -->
+  <!--   </xsl:element> -->
+  <!-- </xsl:template> -->
 
-  <xsl:template name="social-media-links">
-    <ul class="social-media-list">
-      <li>
-        <a href="https://www.facebook.com/clarindeutschland">
-          <svg class="svg-icon" id="facebook" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
-            <path d="M15.117 0H.883C.395 0 0 .395 0 .883v14.234c0 .488.395.883.883.883h7.663V9.804H6.46V7.39h2.086V5.607c0-2.066 1.262-3.19 3.106-3.19.883 0 1.642.064 1.863.094v2.16h-1.28c-1 0-1.195.48-1.195 1.18v1.54h2.39l-.31 2.42h-2.08V16h4.077c.488 0 .883-.395.883-.883V.883C16 .395 15.605 0 15.117 0"/>
-          </svg>
-          <span class="username">clarindeutschland</span>
-        </a>
-      </li>
-      <li>
-        <a href="https://www.twitter.com/CLARIN_D">
-          <svg class="svg-icon" id="twitter" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
-            <path d="M16 3.038c-.59.26-1.22.437-1.885.517.677-.407 1.198-1.05 1.443-1.816-.634.37-1.337.64-2.085.79-.598-.64-1.45-1.04-2.396-1.04-1.812 0-3.282 1.47-3.282 3.28 0 .26.03.51.085.75-2.728-.13-5.147-1.44-6.766-3.42C.83 2.58.67 3.14.67 3.75c0 1.14.58 2.143 1.46 2.732-.538-.017-1.045-.165-1.487-.41v.04c0 1.59 1.13 2.918 2.633 3.22-.276.074-.566.114-.865.114-.21 0-.41-.02-.61-.058.42 1.304 1.63 2.253 3.07 2.28-1.12.88-2.54 1.404-4.07 1.404-.26 0-.52-.015-.78-.045 1.46.93 3.18 1.474 5.04 1.474 6.04 0 9.34-5 9.34-9.33 0-.14 0-.28-.01-.42.64-.46 1.2-1.04 1.64-1.7z"/>
-          </svg>
-          <span class="username">CLARIN_D</span>
-        </a>
-      </li>
-      <li>
-        <a href="https://youtube.com/CLARINGermany">
-          <svg class="svg-icon" id="youtube" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
-            <path d="M0 7.345c0-1.294.16-2.59.16-2.59s.156-1.1.636-1.587c.608-.637 1.408-.617 1.764-.684C3.84 2.36 8 2.324 8 2.324s3.362.004 5.6.166c.314.038.996.04 1.604.678.48.486.636 1.588.636 1.588S16 6.05 16 7.346v1.258c0 1.296-.16 2.59-.16 2.59s-.156 1.102-.636 1.588c-.608.638-1.29.64-1.604.678-2.238.162-5.6.166-5.6.166s-4.16-.037-5.44-.16c-.356-.067-1.156-.047-1.764-.684-.48-.487-.636-1.587-.636-1.587S0 9.9 0 8.605v-1.26zm6.348 2.73V5.58l4.323 2.255-4.32 2.24z"/>
-          </svg>
-          <span class="username">CLARINGermany</span>
-        </a>
-      </li>
-    </ul>
-  </xsl:template>
+  <!-- <xsl:template name="social-media-links"> -->
+  <!--   <ul class="social-media-list"> -->
+  <!--     <li> -->
+  <!--       <a href="https://www.facebook.com/clarindeutschland"> -->
+  <!--         <svg class="svg-icon" id="facebook" fill-rule="evenodd" clip-rule="evenodd" -->
+  <!--              stroke-linejoin="round" stroke-miterlimit="1.414"> -->
+  <!--           <path -->
+  <!--               d="M15.117 0H.883C.395 0 0 .395 0 .883v14.234c0 .488.395.883.883.883h7.663V9.804H6.46V7.39h2.086V5.607c0-2.066 1.262-3.19 3.106-3.19.883 0 1.642.064 1.863.094v2.16h-1.28c-1 0-1.195.48-1.195 1.18v1.54h2.39l-.31 2.42h-2.08V16h4.077c.488 0 .883-.395.883-.883V.883C16 .395 15.605 0 15.117 0" -->
+  <!--               /> -->
+  <!--         </svg> -->
+  <!--         <span class="username">clarindeutschland</span> -->
+  <!--       </a> -->
+  <!--     </li> -->
+  <!--     <li> -->
+  <!--       <a href="https://www.twitter.com/CLARIN_D"> -->
+  <!--         <svg class="svg-icon" id="twitter" fill-rule="evenodd" clip-rule="evenodd" -->
+  <!--              stroke-linejoin="round" stroke-miterlimit="1.414"> -->
+  <!--           <path -->
+  <!--               d="M16 3.038c-.59.26-1.22.437-1.885.517.677-.407 1.198-1.05 1.443-1.816-.634.37-1.337.64-2.085.79-.598-.64-1.45-1.04-2.396-1.04-1.812 0-3.282 1.47-3.282 3.28 0 .26.03.51.085.75-2.728-.13-5.147-1.44-6.766-3.42C.83 2.58.67 3.14.67 3.75c0 1.14.58 2.143 1.46 2.732-.538-.017-1.045-.165-1.487-.41v.04c0 1.59 1.13 2.918 2.633 3.22-.276.074-.566.114-.865.114-.21 0-.41-.02-.61-.058.42 1.304 1.63 2.253 3.07 2.28-1.12.88-2.54 1.404-4.07 1.404-.26 0-.52-.015-.78-.045 1.46.93 3.18 1.474 5.04 1.474 6.04 0 9.34-5 9.34-9.33 0-.14 0-.28-.01-.42.64-.46 1.2-1.04 1.64-1.7z" -->
+  <!--               /> -->
+  <!--         </svg> -->
+  <!--         <span class="username">CLARIN_D</span> -->
+  <!--       </a> -->
+  <!--     </li> -->
+  <!--     <li> -->
+  <!--       <a href="https://youtube.com/CLARINGermany"> -->
+  <!--         <svg class="svg-icon" id="youtube" fill-rule="evenodd" clip-rule="evenodd" -->
+  <!--              stroke-linejoin="round" stroke-miterlimit="1.414"> -->
+  <!--           <path -->
+  <!--               d="M0 7.345c0-1.294.16-2.59.16-2.59s.156-1.1.636-1.587c.608-.637 1.408-.617 1.764-.684C3.84 2.36 8 2.324 8 2.324s3.362.004 5.6.166c.314.038.996.04 1.604.678.48.486.636 1.588.636 1.588S16 6.05 16 7.346v1.258c0 1.296-.16 2.59-.16 2.59s-.156 1.102-.636 1.588c-.608.638-1.29.64-1.604.678-2.238.162-5.6.166-5.6.166s-4.16-.037-5.44-.16c-.356-.067-1.156-.047-1.764-.684-.48-.487-.636-1.587-.636-1.587S0 9.9 0 8.605v-1.26zm6.348 2.73V5.58l4.323 2.255-4.32 2.24z" -->
+  <!--               /> -->
+  <!--         </svg> -->
+  <!--         <span class="username">CLARINGermany</span> -->
+  <!--       </a> -->
+  <!--     </li> -->
+  <!--   </ul> -->
+  <!-- </xsl:template> -->
 </xsl:stylesheet>
