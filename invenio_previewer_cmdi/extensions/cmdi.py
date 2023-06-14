@@ -10,8 +10,8 @@
 from flask import current_app, render_template, url_for
 # detect_encoding does not seem to be working here
 # from invenio_previewer.utils import detect_encoding
-from lxml import etree
 import requests
+from saxonche import *
 
 # Part implementing previewer
 previewable_extensions = ['cmdi']
@@ -20,10 +20,15 @@ def can_preview(file):
 
 def render(file, stylesheet):
     with file.open() as fp:
-        encoding = "utf-8" # detect_encoding(fp, default="utf-8")
-        content = fp.read().decode(encoding)
-        transform = etree.XSLT(etree.fromstring(bytes(stylesheet, "utf-8")))
-        return str(transform(etree.fromstring(bytes(content, "utf-8"))))
+        with PySaxonProcessor(license=False) as proc:
+            xsltproc = proc.new_xslt30_processor()
+            encoding = "utf-8" # detect_encoding(fp, default="utf-8")
+            content = fp.read().decode(encoding)
+            document = proc.parse_xml(xml_text=content)
+#            transform = etree.XSLT(etree.fromstring(bytes(stylesheet, "utf-8")))
+#            return str(transform(etree.fromstring(bytes(content, "utf-8"))))
+            executable = xsltproc.compile_stylesheet(stylesheet_text=stylesheet)
+            return executable.transform_to_string(xdm_node=document)
     
 def preview(file):
     current_app.logger.info('Rendering %s using stylesheet %s', file.filename, current_app.config['CMDI_PREVIEWER_STYLESHEET'])
