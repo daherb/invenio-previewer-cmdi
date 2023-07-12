@@ -691,7 +691,7 @@
       	To report a violation on this resource, please click on the following link to send an email: 
 	<xsl:element name="a">
 	  <xsl:attribute name="href">
-	    <xsl:text>mailto:placeholder@ids-mannheim.de?subject=Report%20Violation:</xsl:text> <xsl:value-of select="//*[local-name() = 'MdSelfLink']"/>
+	    <xsl:text>mailto:data-steward@ids-mannheim.de?subject=Report%20Violation:</xsl:text> <xsl:value-of select="//*[local-name() = 'MdSelfLink']"/>
 	    <xsl:text>&amp;body=Dear IDS repository team! I'd like to report a violation with regard to resource mentioned in the subject line. The reasons are as follows: PLEASE GIVE  REASONS HERE</xsl:text>
 	  </xsl:attribute>
 	  <bf>CLICK HERE TO REPORT VIOLATION.</bf>
@@ -874,7 +874,7 @@
         <dd>
 	  <xsl:element name="a">
 	    <xsl:attribute name="href">
-	      <xsl:text>mailto:placeholder@ids-mannheim.de?subject=Request%20Access:%20</xsl:text> <xsl:value-of select="//*[local-name() = 'MdSelfLink']"/>
+	      <xsl:text>mailto:data-steward@ids-mannheim.de?subject=Request%20Access:%20</xsl:text> <xsl:value-of select="//*[local-name() = 'MdSelfLink']"/>
 	      <xsl:text>&amp;body=Dear IDS repository team! I'd like to get access to data in the repository.</xsl:text>
 	    </xsl:attribute>
 	    <bf>CLICK HERE to contact archivist to get access to data.</bf>
