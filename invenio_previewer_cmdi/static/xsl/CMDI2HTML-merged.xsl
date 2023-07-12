@@ -691,8 +691,8 @@
       	To report a violation on this resource, please click on the following link to send an email: 
 	<xsl:element name="a">
 	  <xsl:attribute name="href">
-	    <xsl:text>mailto:clarin-repository@sfs.uni-tuebingen.de?subject=Report%20Violation:</xsl:text> <xsl:value-of select="//*[local-name() = 'MdSelfLink']"/>
-	    <xsl:text>&amp;body=Dear Talar repository team! I'd like to report a violation with regard to resource mentioned in the subject line. The reasons are as follows: PLEASE GIVE  REASONS HERE</xsl:text>
+	    <xsl:text>mailto:placeholder@ids-mannheim.de?subject=Report%20Violation:</xsl:text> <xsl:value-of select="//*[local-name() = 'MdSelfLink']"/>
+	    <xsl:text>&amp;body=Dear IDS repository team! I'd like to report a violation with regard to resource mentioned in the subject line. The reasons are as follows: PLEASE GIVE  REASONS HERE</xsl:text>
 	  </xsl:attribute>
 	  <bf>CLICK HERE TO REPORT VIOLATION.</bf>
 	</xsl:element>
@@ -720,7 +720,7 @@
       <xsl:call-template name="CreatorsAsCommaSeparatedText"/>
       <xsl:call-template name="CreationDatesAsText"/>
       <xsl:call-template name="TitleAsCite"/>
-      Data set in Tübingen Archive of Language Resources. 
+      Data set in IDS Repository. 
       <br/>Persistent identifier:
       <xsl:apply-templates select="//*[local-name() = 'MdSelfLink']" mode="link-to-url"/>
   </xsl:template><xsl:template name="InDatasetCitation">
@@ -734,7 +734,7 @@
       <xsl:value-of select="substring-after((//*[local-name() = 'ResourceRef'])[2], '@')"/>
       <xsl:text>. </xsl:text>
       In: <xsl:call-template name="TitleAsCite"/>
-      Data set in Tübingen Archive of Language Resources. 
+      Data set in IDS Repository. 
       <br/>Persistent identifier:
       <xsl:apply-templates select="(//*[local-name() = 'ResourceRef'])[2]" mode="link-to-url"/>
   </xsl:template><xsl:template name="CreatorsAsCommaSeparatedText">
@@ -870,12 +870,12 @@
 	  </xsl:element>
         </dd>
 
-        <dt>TALAR / Archive Contact</dt>
+        <dt>Archive Contact</dt>
         <dd>
 	  <xsl:element name="a">
 	    <xsl:attribute name="href">
-	      <xsl:text>mailto:clarin-repository@sfs.uni-tuebingen.de?subject=Request%20Access:%20</xsl:text> <xsl:value-of select="//*[local-name() = 'MdSelfLink']"/>
-	      <xsl:text>&amp;body=Dear Talar repository team! I'd like to get access to data in the repository.</xsl:text>
+	      <xsl:text>mailto:placeholder@ids-mannheim.de?subject=Request%20Access:%20</xsl:text> <xsl:value-of select="//*[local-name() = 'MdSelfLink']"/>
+	      <xsl:text>&amp;body=Dear IDS repository team! I'd like to get access to data in the repository.</xsl:text>
 	    </xsl:attribute>
 	    <bf>CLICK HERE to contact archivist to get access to data.</bf>
 	  </xsl:element>		    
@@ -970,20 +970,6 @@
   <xsl:output method="html" indent="yes"/><xsl:template name="ResourceProxyListSection" match="*[local-name() = 'ResourceProxyList']">
 
     <p>Persistent Identifier (PID) of this resource: <xsl:apply-templates select="//*[local-name() = 'MdSelfLink']" mode="link-to-url"/>
-    </p>
-
-    <p>Call CMDI Explorer with this resource: 
-     <xsl:element name="a">
-						    <xsl:attribute name="style">
-						      border:solid; 
-						    </xsl:attribute>
-						    <xsl:attribute name="href">
-						      <xsl:value-of select="concat('https://weblicht.sfs.uni-tuebingen.de/CMDIExplorer/#/talar/', encode-for-uri(normalize-space(//*[local-name() = 'MdSelfLink'])))"/>
-						    </xsl:attribute>
-						    <xsl:text>
-						      Open Link in CMDI Explorer
-						    </xsl:text>
-     </xsl:element>
     </p>
     
     <p>Landing page for this resource: <xsl:for-each select="./*">
@@ -1800,7 +1786,7 @@ new SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
 		
 		  - ToolProfile (clarin.eu:cr1:p_1447674760338),
 		  - TextCorpusProfile ('clarin.eu:cr1:p_1442920133046),
-		  - LexicalResourceProfile (clarin.eu:cr1:p_1445542587893),
+		  - LexicalResourceProfile (clarin.eu:cr1:p_1445542587893), 
 		  - SpeechCorpusProfile (clarin.eu:cr1:p_1485173990943), and
 		  - ExperimentProfile (clarin.eu:cr1:p_1447674760337)
 		  - CourseProfile (clarin.eu:cr1:p_1505397653792).
@@ -1809,7 +1795,7 @@ new SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
 		  - OLAC-DcmiTerms: clarin.eu:cr1:p_1288172614026
 		  - DcmiTerms: clarin.eu:cr1:p_1288172614023
 		  
-		  Older version of the profiles are partly supported, currently only if used  in CMDI 1.2 files:
+		  Older version of the profiles are partly supported, currently only if used  in CMDI 1.2 files: 
 		  - ExperimentProfile: clarin.eu:cr1:p_1302702320451
 		  - LexicalResourceProfile: clarin.eu:cr1:p_1290431694579
 		  - TextCorpusProfile: clarin.eu:cr1:p_1290431694580
@@ -1817,13 +1803,13 @@ new SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
 		  - WebLichtWebService: clarin.eu:cr1:p_1320657629644
 		  - Resource Bundle: clarin.eu:cr1:p_1320657629649
 		  
-		  Newer version of the profiles are partly, currently only if used  in CMDI 1.2 files:
-		  - ExperimentProfile: clarin.eu:cr1:p_1524652309872
+		  Newer version of the profiles are partly, currently only if used  in CMDI 1.2 files: 
+		  - ExperimentProfile: clarin.eu:cr1:p_1524652309872 
 		  - TextCorpusProfile: clarin.eu:cr1:p_1524652309874
 		  - ToolProfile: clarin.eu:cr1:p_1524652309875
 		  - LexicalResourceProfile: clarin.eu:cr1:p_1524652309876
 		  - CourseProfile: clarin.eu:cr1:p_1524652309877
-		  - SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
+		  - SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878 
 		  
 	  
 		</xsl:text>
@@ -1928,7 +1914,7 @@ new SpeechCorpusProfile: clarin.eu:cr1:p_1524652309878
         <title>
           <xsl:value-of select="//*[local-name() = 'ResourceName']"/>
           - <xsl:value-of select="//*[local-name() = 'ResourceClass']"/>
-          in Tübingen Archive of Language Resources 
+          in IDS Repository 
         </title>
         <link rel="stylesheet" type="text/css" href="https://talar.sfb833.uni-tuebingen.de/assets/main.css"/>
 
@@ -2058,32 +2044,7 @@ footer {
 
 
       <body>
-        <header>
-          <a class="site-title" rel="author" href="https://talar.sfb833.uni-tuebingen.de/">
-             TALAR - Tübingen Archive of Language Resources
-          </a>
-          <nav class="site-nav">
-            <input id="nav-trigger" class="nav-trigger" type="checkbox"/>
-            <label for="nav-trigger">
-              <span class="menu-icon">
-                <svg viewBox="0 0 18 15" width="18px" height="15px">
-                  <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
-                </svg>
-              </span>
-            </label>
-
-            <div class="trigger">
-              <a class="page-link" href="https://talar.sfb833.uni-tuebingen.de/about/">About</a>
-              <a class="page-link" href="https://talar.sfb833.uni-tuebingen.de/contact/">Contact</a>
-              <a class="page-link" href="https://talar.sfb833.uni-tuebingen.de/archival/">Data Management</a>
-              <a class="page-link" href="https://talar.sfb833.uni-tuebingen.de/help/">Help</a>
-              <a class="page-link" href="https://talar.sfb833.uni-tuebingen.de/privacy_html/">Privacy</a>
-              <a class="page-link" href="https://talar.sfb833.uni-tuebingen.de/stats/">Statistics</a>
-              <a class="page-link" href="https://talar.sfb833.uni-tuebingen.de/technology/">Technology</a>
-            </div>
-          </nav>
-        </header>
-       
+     
         <main>
           <h1>
             Resource:
@@ -2152,19 +2113,6 @@ footer {
           </article>
         </main>
 
-        <footer>
-          <address>
-            <p>
-              Seminar für Sprachwissenschaft<br/>
-              SFB 833<br/>
-              Wilhelmstrasse 19<br/>
-              D-72074 Tübingen<br/>
-              Tel. 07071 29-77151<br/>
-              <a class="u-email" href="mailto:clarin-repository@sfs.uni-tuebingen.de">clarin-repository@sfs.uni-tuebingen.de</a>
-            </p>
-          </address>
-          <!-- <xsl:call-template name="social-media-links"/>  -->
-        </footer>
       </body>
     </html>
   </xsl:template>
